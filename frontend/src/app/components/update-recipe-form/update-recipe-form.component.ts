@@ -22,18 +22,22 @@ import { RecipeService } from '../../services/recipe.service';
 })
 export class UpdateRecipeFormComponent {
   recipeItem: any = {
-    title: 'Pizza',
-    description: 'Nice food',
-    foodType: 'veg',
-    image: 'test.jpg',
+    title: '',
+    description: '',
+    foodType: '',
+    image: '',
   };
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public recipe: any,
     private recipeService: RecipeService
   ) {}
 
   onSubmit() {
     console.log('values', this.recipeItem);
+    this.recipeService.updateRecipe(this.recipeItem).subscribe();
+  }
+  ngOnInit() {
+    this.recipeItem = this.recipe;
   }
 }
