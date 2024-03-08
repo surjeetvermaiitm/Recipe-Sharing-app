@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -28,6 +29,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AuthComponent {
   isRegister = false;
+  constructor(public authService: AuthService) {}
   registerationForm = new FormGroup({
     fullName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -44,9 +46,23 @@ export class AuthComponent {
 
   handleRegister() {
     console.log('register', this.registerationForm.value);
+    this.authService.signup(this.registerationForm.value).subscribe({
+      next: (response) => {
+        localStorage.setItem('jwt', response.jwt);
+        this.authService.getUserProfile().subscribe();
+        console.log('signup success', response);
+      },
+    });
   }
   handleLogin() {
     console.log('login', this.loginForm.value);
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (response) => {
+        localStorage.setItem('jwt', response.jwt);
+        this.authService.getUserProfile().subscribe();
+        console.log('login success', response);
+      },
+    });
   }
   togglePanel() {
     this.isRegister = !this.isRegister;
